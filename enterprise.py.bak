@@ -60,13 +60,12 @@ def export_mitigations():
     print("---->Mitigation Export Complete<----")
 
 def export_techniques():
-    attack = Attck(nested_subtechniques=False)
+    attack = Attck()
     exported_techniques=[]
 
     for technique in attack.enterprise.techniques:
         tactics=[]
         platforms=[]
-        datasources=[]
         for tactic in technique.tactics:
            tactic_obj=tactic.id
            tactics.append(tactic_obj)
@@ -75,12 +74,12 @@ def export_techniques():
             platform=platform
         else: 
             platform=[]
-        if isinstance(technique.data_sources, list):
-           for datasource in technique.data_sources:
-              for datacomponent in datasource.data_components:
-                 ds = datasource.id+"-"+datacomponent.name
-                 datasources.append(ds)
-        technique_obj = {'id':technique.id,'name':technique.name,'description':technique.description,'platforms':",".join(platform),'data_source':",".join(datasources),'tactics':",".join(tactics)}
+        datasource = technique.data_sources
+        if isinstance(datasource, list):
+          datasource=datasource
+        else:
+          datasource=[]
+        technique_obj = {'id':technique.id,'name':technique.name,'description':technique.description,'platforms':",".join(platform),'data_source':",".join(datasource),'tactics':",".join(tactics)}
         exported_techniques.append(technique_obj)
 
     csv_fields = ['id','name','description','platforms','data_source','tactics']
@@ -189,7 +188,7 @@ def main():
    softwaredump.start()
 
    # Dump Mitre Mitigations
-   print("-->Dumping Mitigations<--")
+   print("-->Dumpint Mitigations<--")
    mitigationdump = threading.Thread(target=export_mitigations)
    mitigationdump.start()
 
