@@ -19,8 +19,15 @@ import csv
 from datetime import datetime
 import threading
 
+attack=Attck()
+
+def csv_writer(csv_fields, writeable_results, filename):
+    with open(filename, 'w') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=csv_fields)
+        writer.writeheader()
+        writer.writerows(writeable_results)
+
 def export_tactics():
-    attack = Attck()
     exported_tactics=[]
 
     for tactic in attack.enterprise.tactics:
@@ -30,15 +37,11 @@ def export_tactics():
     csv_fields = ['id','name','description']
     filename="attack_tactics_"+datetime.now().strftime("%Y%m%d")+".csv"
 
-    with open(filename, 'w') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=csv_fields)
-        writer.writeheader()
-        writer.writerows(exported_tactics)
+    csv_writer(csv_fields, exported_tactics, filename)
 
     print("---->Tactic Export Complete<----")
 
 def export_mitigations():
-    attack = Attck()
     exported_mitigations=[]
 
     for mitigation in attack.enterprise.mitigations:
@@ -52,10 +55,7 @@ def export_mitigations():
     csv_fields = ['id','name','type','description','techniques']
     filename="attack_mitigations_"+datetime.now().strftime("%Y%m%d")+".csv"
 
-    with open(filename, 'w') as csvfile:
-       writer = csv.DictWriter(csvfile, fieldnames=csv_fields)
-       writer.writeheader()
-       writer.writerows(exported_mitigations)
+    csv_writer(csv_fields, exported_mitigations, filename)
 
     print("---->Mitigation Export Complete<----")
 
@@ -86,16 +86,12 @@ def export_techniques():
     csv_fields = ['id','name','description','platforms','data_source','tactics']
     filename="attack_techniques_"+datetime.now().strftime("%Y%m%d")+".csv"
 
-    with open(filename, 'w') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=csv_fields)
-        writer.writeheader()
-        writer.writerows(exported_techniques)
+    csv_writer(csv_fields, exported_techniques, filename)
 
     print("---->Technique Export Complete<----")
 
 
 def export_actors():
-    attack = Attck()
     exported_actors=[]
 
     for actor in attack.enterprise.actors:
@@ -113,16 +109,11 @@ def export_actors():
     csv_fields = ['id','name','description','country','techniques']
     filename="attack_actors_"+datetime.now().strftime("%Y%m%d")+".csv"
 
-    with open(filename, 'w') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=csv_fields)
-        writer.writeheader()
-        writer.writerows(exported_actors)
-
+    csv_writer(csv_fields, exported_actors, filename)
     print("---->Actor Export Complete<----")
 
 
 def export_tools():
-    attack = Attck()
     exported_tools=[]
     
     # Export Tools
@@ -159,10 +150,7 @@ def export_tools():
     csv_fields = ['id','name','description','type','techniques','actors','platforms']
     filename='attack_tools_'+datetime.now().strftime("%Y%m%d")+".csv"
 
-    with open(filename, 'w') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=csv_fields)
-        writer.writeheader()
-        writer.writerows(exported_tools)
+    csv_writer(csv_fields, exported_tools, filename)
 
     print("---->Tool Export Complete<----")
 
